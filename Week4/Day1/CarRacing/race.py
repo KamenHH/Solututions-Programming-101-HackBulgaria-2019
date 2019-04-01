@@ -52,7 +52,7 @@ class Car:
 
     def __repr__(self):
         return str(self)
-    
+
 
 class Driver:
     def __init__(self, name, car):
@@ -87,10 +87,9 @@ class Race:
     def result(self):
         drivers_with_chances = list(zip(self.drivers, self.crash_chances))
         avg = sum(self.crash_chances)/len(self.crash_chances)
-        print(avg)
-        print(drivers_with_chances)
         filtered_drivers = Race._filter_drivers(avg, drivers_with_chances)
-        print(sorted(filtered_drivers, key=lambda driver: driver[0].get_speed()), reverse=True)
+        filtered_drivers.sort(key=lambda driver: driver[0].get_speed(), reverse=True)
+        return filtered_drivers
         
     @staticmethod
     def _filter_drivers(avg, drivers_with_chances):
@@ -104,4 +103,4 @@ if __name__ == '__main__':
     drivers_list = Driver.build_drivers_list(drivers_stats)
     crash_chance = gcc.generate_chance_for_drivers(drivers_list)
     race = Race(drivers_list, crash_chance)
-    race.result()
+    print(race.result())

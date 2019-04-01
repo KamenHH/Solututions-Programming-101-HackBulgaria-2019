@@ -1,0 +1,7 @@
+=== 22-03-2019 ===
+27.7, Food, New Expense
+10, Deposit, New Income
+=== 23-03-2019 ===
+700, Salary, New Income
+50, Savings, New Income
+4, Eating Out, New Expense

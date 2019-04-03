@@ -58,7 +58,7 @@ class Monomial:
         if self.variable == '':
             self._exponent = 0
         else:
-            pattern = re.compile('({})\\^?(\\d*)'.format(self.variable))
+            pattern = re.compile(r'({})\^?(\d*)'.format(self.variable))
             match = pattern.search(monomial)
             if match:
                 try:
@@ -72,7 +72,7 @@ class Monomial:
 
     @coefficient.setter
     def coefficient(self, monomial):
-        pattern = re.compile('\+?-?(\\d*)\*?{}?'.format(self.variable))
+        pattern = re.compile(r'\+?-?(\d*)\*?{}?'.format(self.variable))
         match = pattern.search(monomial)
         self._coefficient = int(match.group(1)) if match.group(1) else 1
 
@@ -106,7 +106,7 @@ class Polynomial:
     @monomial_list.setter
     def monomial_list(self, polynomial):
         pattern = re.compile(r'\+?-?[0-9a-zA-Z*^]*')
-        print(re.findall(pattern, polynomial)[:-1:])
+        # print(re.findall(pattern, polynomial)[:-1:])
         self._monomial_list = [Monomial(monomial)
                                for monomial in re.findall(pattern, polynomial)[:-1:]]
 

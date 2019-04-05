@@ -18,10 +18,10 @@ def encrypt(key):
             from string import ascii_lowercase as letters
             encrypted_str = ''
             for ch in string:
-                if ch.isupper() and ch.lower() in letters:
-                    encrypted_str += letters[(letters.index(ch.lower()) + key) % len(letters)].upper()
-                elif ch in letters:
-                    encrypted_str += letters[(letters.index(ch) + key) % len(letters)]
+                if ch.isalpha():
+                    is_upper = ch.isupper()
+                    encrypted_letter = letters[(letters.index(ch.lower()) + key) % len(letters)]
+                    encrypted_str += encrypted_letter.upper() if is_upper else encrypted_letter
                 else:
                     encrypted_str += ch
             return func(encrypted_str)
@@ -34,10 +34,9 @@ def log(logs_file):
     from datetime import datetime
     def log_wrapper(func):
         def func_wrapper(*args, **kwargs):
-            date = datetime.now()
             func(*args, **kwargs)
             with open(logs_file, 'a') as f:
-                f.write(f'{func.__name__} called, at {date}\n')
+                f.write(f'{func.__name__} called, at {datetime.now()}\n')
         return func_wrapper
     return log_wrapper
 
@@ -59,21 +58,21 @@ def performance(file):
 
 
 def main():
-    @performance('performance_log.txt')
-    @log('logs.txt')
-    def get_squares(lst):
-        return [num**2 for num in lst]
-
-    get_squares([i for i in range(10000)])
+    # @performance('performance_log.txt')
+    # @log('logs.txt')
+    # def get_squares(lst):
+    #     return [num**2 for num in lst]
+    #
+    # get_squares([i for i in range(10000)])
     # @accepts(str, int)
     # def say_hello(name, age):
     #     print(f'name: {name}, age: {age}')
     #
-    # @encrypt(2)
-    # def print_str(string):
-    #     print(string)
-    #
-    # print_str('Get get get low  ')
+    @encrypt(2)
+    def print_str(string):
+        print(string)
+
+    print_str('Get get get low  ')
 
 
 if __name__ == '__main__':

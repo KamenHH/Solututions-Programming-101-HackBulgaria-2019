@@ -1,9 +1,11 @@
 import os
 DIR_PATH = 'Book'
 
+
 def reader():
-    files = os.listdir(DIR_PATH).sort(key=lambda file: int(file.strip('.txt')))
-    for file in os.listdir(DIR_PATH):
+    files = os.listdir(DIR_PATH)
+    os.listdir(DIR_PATH).sort()
+    for file in files:
         with open(os.path.join(DIR_PATH, file)) as f:
             line = f.readline() 
             while True:    
@@ -16,10 +18,12 @@ def reader():
                     line = f.readline()
                 except IndexError:
                     break
-                                     
+
+
 def main():
     for line in reader():
         print(line)
+
 
 if __name__ == '__main__':
     main()

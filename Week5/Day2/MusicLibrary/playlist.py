@@ -27,6 +27,7 @@ class Playlist:
         try:
             return self._song_list[index]
         except IndexError:
+            # slef._index = 0 IF self._repeat ELSE <no change> ?
             self._index = 0
             raise StopIteration
 
@@ -57,6 +58,7 @@ class Playlist:
         return artists
 
     def shuffle_playlist(self):
+        """Mutator: Shuffles the playlist in place."""
         if self._shuffle:
             random.shuffle(self._song_list)
 
@@ -113,25 +115,18 @@ class Playlist:
             playlist_data = json.load(f)
             p = cls('name')
             p.add_songs(cls.deserialize(playlist_data))
+            f.close()
             return p
         except FileNotFoundError:
             print(f'Playlist doesn\'t exit in "{cls.PLAYLISTS_DIR }" directory!')
-            sys.exit()
-        finally:
-            f.close()
+            sys.exit() 
 
     @staticmethod
     def deserialize(playlist_data):
         deserialized_songs = []
         for song in playlist_data:
-            deserialized_songs.append(
-                Song(*{
-                        'title': song["title"],
-                        'artist': song["artist"],
-                        'album': song["album"],
-                        'length': song["length"]
-                    }.values())
-                )
+            deserialized_songs.append(Song(song["title"], song["artist"], 
+                                           song["album"], song["length"]))
         return deserialized_songs
         
 
@@ -146,13 +141,15 @@ class Playlist:
                 elif user_input.lower() == 'n':
                     return False
         return True
-
+# 
 
 if __name__ == "__main__":
+    print(os.getcwd())
     # s1 = Song('Hexagram', 'Deftones', 'Deftones',  215)
     # s2 = Song('Panama', 'Van Halen', '1984', 255)
     # p = Playlist('Playlist1')
     # p.add_songs([s1, s2])
     # p.pprint_playlist()
+    # p.save()
     p = Playlist.load('Playlist1')
     p.pprint_playlist()

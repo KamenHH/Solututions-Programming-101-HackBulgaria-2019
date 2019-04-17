@@ -40,7 +40,3 @@ class Song:
                     return f'{h}:{m}:{s}'
                 return f'{m}:{s}'
             return f'{s}'
-
-
-
-    

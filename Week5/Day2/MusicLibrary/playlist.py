@@ -1,7 +1,11 @@
-from song import Song
+import os
+import sys
+import json
 import random 
+from song import Song
 
 class Playlist:
+    PLAYLISTS_DIR = 'playlist-data'
     def __init__(self, name, repeat=False, shuffle=False):
         self._song_list = []
         self._name = name
@@ -82,6 +86,73 @@ class Playlist:
             print(f'| {song.artist.ljust(artists_col_width)} ' \
                   f'| {song.title.ljust(titles_col_width)} ' \
                   f'| {song.length().ljust(length_col_width)} |')
-
-
         
+    def serialize(self):
+        serialized_songs = []
+        for song in self:
+            serialized_songs.append({
+                'title': song.title,
+                'artist': song.artist,
+                'album': song.album,
+                'length': int(song.length(seconds=True))
+            })
+        return serialized_songs
+
+    def save(self):
+        """Saves the playlist instance in a new file json with the same name of the playlist."""
+        filename = self._name
+        if Playlist.check_filename(filename):
+            with open(os.path.join(Playlist.PLAYLISTS_DIR, filename), 'w') as f:
+                json.dump(self.serialize(), f, indent=4)
+        
+
+    @classmethod
+    def load(cls, filename):
+        try:
+            f = open(os.path.join(cls.PLAYLISTS_DIR, filename))
+            playlist_data = json.load(f)
+            p = cls('name')
+            p.add_songs(cls.deserialize(playlist_data))
+            return p
+        except FileNotFoundError:
+            print(f'Playlist doesn\'t exit in "{cls.PLAYLISTS_DIR }" directory!')
+            sys.exit()
+        finally:
+            f.close()
+
+    @staticmethod
+    def deserialize(playlist_data):
+        deserialized_songs = []
+        for song in playlist_data:
+            deserialized_songs.append(
+                Song(*{
+                        'title': song["title"],
+                        'artist': song["artist"],
+                        'album': song["album"],
+                        'length': song["length"]
+                    }.values())
+                )
+        return deserialized_songs
+        
+
+    @staticmethod
+    def check_filename(filename):
+        dir_content = os.listdir(Playlist.PLAYLISTS_DIR)
+        if filename in dir_content:
+            while True:
+                user_input = input(f'A playlist with the name "{filename}" already exists, do you wish do override it? (Y/n)')
+                if user_input.lower() == 'y':
+                    return True
+                elif user_input.lower() == 'n':
+                    return False
+        return True
+
+
+if __name__ == "__main__":
+    # s1 = Song('Hexagram', 'Deftones', 'Deftones',  215)
+    # s2 = Song('Panama', 'Van Halen', '1984', 255)
+    # p = Playlist('Playlist1')
+    # p.add_songs([s1, s2])
+    # p.pprint_playlist()
+    p = Playlist.load('Playlist1')
+    p.pprint_playlist()

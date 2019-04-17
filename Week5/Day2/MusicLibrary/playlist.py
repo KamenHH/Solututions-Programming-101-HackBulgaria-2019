@@ -141,15 +141,12 @@ class Playlist:
                 elif user_input.lower() == 'n':
                     return False
         return True
-# 
+
 
 if __name__ == "__main__":
-    print(os.getcwd())
-    # s1 = Song('Hexagram', 'Deftones', 'Deftones',  215)
-    # s2 = Song('Panama', 'Van Halen', '1984', 255)
-    # p = Playlist('Playlist1')
-    # p.add_songs([s1, s2])
-    # p.pprint_playlist()
-    # p.save()
-    p = Playlist.load('Playlist1')
+    s1 = Song('Hexagram', 'Deftones', 'Deftones',  215)
+    s2 = Song('Panama', 'Van Halen', '1984', 255)
+    p = Playlist('Playlist1')
+    p.add_songs([s1, s2])
+    p.save()
     p.pprint_playlist()

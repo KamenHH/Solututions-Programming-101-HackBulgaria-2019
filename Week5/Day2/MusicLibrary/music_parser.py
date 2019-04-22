@@ -5,7 +5,7 @@ class SongParser(EasyMP3):
     def __init__(self, path):
         super().__init__(path)
 
-    def parse_song(self, path):
+    def parse_song_tags(self):
         title = self.parse_title()
         artist = self.parse_artist()
         album = self.parse_album()
@@ -13,21 +13,16 @@ class SongParser(EasyMP3):
         return (title, artist, album, length)
 
     def parse_title(self):
-        #TODO: implement
-        return title
-        pass
+        title = self.get('title')
+        return title[0] if title else 'Unknown'
 
     def parse_artist(self):
-        #TODO: implement
-        return artist
-        pass
+        artist = self.get('artist')
+        return artist[0] if artist else 'Unknown'
 
     def parse_album(self):
-        #TODO: implement
-        return album
-        pass
-
+        album = self.get('album')
+        return album[0] if album else 'Unknown'
+    
     def parse_length(self):
-        #TODO: implement
-        return length
-        pass
+        return int(self.info.length)

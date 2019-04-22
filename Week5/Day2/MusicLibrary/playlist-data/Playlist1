@@ -1,14 +1,20 @@
 [
     {
-        "title": "Hexagram",
-        "artist": "Deftones",
-        "album": "Deftones",
-        "length": 215
+        "title": "Billy Idol",
+        "artist": "Billy Idol",
+        "album": "Dancing with myself",
+        "length": 288
     },
     {
         "title": "Panama",
         "artist": "Van Halen",
-        "album": "1984",
-        "length": 255
+        "album": "MCMLXXXIV",
+        "length": 213
+    },
+    {
+        "title": "Sharp Dressed Man",
+        "artist": "ZZ Top",
+        "album": " Eliminator",
+        "length": 253
     }
 ]

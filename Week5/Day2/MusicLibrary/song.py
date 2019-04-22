@@ -8,6 +8,9 @@ class Song:
     def __str__(self):
         return f'{self.artist} - {self.title}, from {self.album} - {self.length()}'
 
+    def __repr__(self):
+        return str(self)
+
     @property
     def title(self):
         return self._title

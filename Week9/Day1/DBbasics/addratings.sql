@@ -1,0 +1,3 @@
+ALTER TABLE langs ADD COLUMN rating INTEGER
+
+

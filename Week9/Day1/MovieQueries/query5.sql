@@ -1,0 +1,3 @@
+INSERT INTO MOVIESTAR
+(NAME, ADDRESS, GENDER, BIRTHDATE) 
+values('Zahari Baharov', 'Sofia', 'M', '1500-07-07');

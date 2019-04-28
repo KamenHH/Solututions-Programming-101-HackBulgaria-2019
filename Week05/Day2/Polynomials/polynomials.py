@@ -3,10 +3,10 @@ import re
 
 class Monomial:
     def __init__(self, monomial):
-        self.sign = monomial
-        self.variable = monomial
-        self.exponent = monomial
-        self.coefficient = monomial
+        self._sign = Monomial.parse_sign(monomial)
+        self._variable = Monomial.parse_variable(monomial)
+        self._exponent = Monomial.parse_exponent(monomial, self._variable)
+        self._coefficient = Monomial.parse_coefficient(monomial, self._variable)
 
     def __str__(self):
         monomial_str = ''
@@ -33,48 +33,49 @@ class Monomial:
     def sign(self):
         return self._sign
 
-    @sign.setter
-    def sign(self, monomial):
-        pattern = re.compile(r'[-+]')
-        sign = pattern.search(monomial)
-        self._sign = sign[0] if sign else '+'
-
     @property
     def variable(self):
         return self._variable
-
-    @variable.setter
-    def variable(self, monomial):
-        pattern = re.compile(r'[a-zA-Z]')
-        variable = pattern.search(monomial)
-        self._variable = variable[0] if variable else ''
 
     @property
     def exponent(self):
         return self._exponent
 
-    @exponent.setter
-    def exponent(self, monomial):
-        if self.variable == '':
-            self._exponent = 0
-        else:
-            pattern = re.compile(r'({})\^?(\d*)'.format(self.variable))
-            match = pattern.search(monomial)
-            if match:
-                try:
-                    self._exponent = int(match.group(2))
-                except ValueError:
-                    self._exponent = 1
-
     @property
     def coefficient(self):
         return self._coefficient
 
-    @coefficient.setter
-    def coefficient(self, monomial):
-        pattern = re.compile(r'\+?-?(\d*)\*?{}?'.format(self.variable))
+    @staticmethod
+    def parse_sign(monomial):
+        pattern = re.compile(r'[-+]')
+        sign = pattern.search(monomial)
+        return sign[0] if sign else '+'
+
+    @staticmethod
+    def parse_variable(monomial):
+        pattern = re.compile(r'[a-zA-Z]')
+        variable = pattern.search(monomial)
+        return variable[0] if variable else ''
+
+    @staticmethod
+    def parse_exponent(monomial, variable):
+        if variable == '':
+            return 0
+        else:
+            pattern = re.compile(r'({})\^?(\d*)'.format(variable))
+            match = pattern.search(monomial)
+            if match:
+                try:
+                    exponent = int(match.group(2))
+                except ValueError:
+                    exponent = 1
+        return exponent
+
+    @staticmethod
+    def parse_coefficient(monomial, variable):
+        pattern = re.compile(r'\+?-?(\d*)\*?{}?'.format(variable))
         match = pattern.search(monomial)
-        self._coefficient = int(match.group(1)) if match.group(1) else 1
+        return int(match.group(1)) if match.group(1) else 1
 
     def get_first_derivative(self):
         if self.variable is '':
@@ -106,7 +107,6 @@ class Polynomial:
     @monomial_list.setter
     def monomial_list(self, polynomial):
         pattern = re.compile(r'\+?-?[0-9a-zA-Z*^]*')
-        # print(re.findall(pattern, polynomial)[:-1:])
         self._monomial_list = [Monomial(monomial)
                                for monomial in re.findall(pattern, polynomial)[:-1:]]
 
@@ -130,10 +130,6 @@ class Polynomial:
 
 
 if __name__ == "__main__":
-    # m1 = Monomial('x^2')
-    # m2 = Monomial('2x')
-    # print(m2.get_first_derivative())
-    # print(m1.get_first_derivative(), m2.get_first_derivative())
     p = Polynomial('x^3+x+2*x+x^10')
     print(p.print_first_derivative())
 

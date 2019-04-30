@@ -1,5 +1,9 @@
+import time
+from datetime import datetime
+from string import ascii_lowercase as letters
+
 def accepts(*types):
-    """accepts decorator, validates if the given func arguments are of the desired type"""
+    """Accepts decorator, validates if the given func arguments are of the desired type."""
     def acceptor(func):
         def decorated(*args):
             for i in range(len(args)):
@@ -15,7 +19,6 @@ def encrypt(key):
     """Encrypt decorator, encrypts the given string using Caesar Cipher method."""
     def encrypt_wrapper(func):
         def func_wrapper(string):
-            from string import ascii_lowercase as letters
             encrypted_str = ''
             for ch in string:
                 if ch.isalpha():
@@ -30,8 +33,7 @@ def encrypt(key):
 
 
 def log(logs_file):
-    """Logs to a file the date & time the function was called"""
-    from datetime import datetime
+    """Logs to a file the date & time the function was called."""
     def log_wrapper(func):
         def func_wrapper(*args, **kwargs):
             func(*args, **kwargs)
@@ -43,7 +45,6 @@ def log(logs_file):
 
 def performance(file):
     """Measure and save to a file the runtime of a func."""
-    import time
     def performance_wrapper(func):
         def save_to_file(func_name, run_time):
                 with open(file, 'a') as f:

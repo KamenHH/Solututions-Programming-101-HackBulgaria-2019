@@ -46,13 +46,16 @@ class DataBuilder:
             gets all the object at each tree level, when the last object in the level is reached, 
             proceeds to the next one."""
             queue, bfs_struct = deque([self.data]), []
-            def bfs_helper(q, struct):
+            def bfs_helper(q, struct):     
                 data = q.popleft()
+                if DataBuilder.is_iterable(data) and not DataBuilder.is_dict(data):
+                    iterables_helper(data, queue)
+                    data = q.popleft()
                 for obj in data:
                     bfs_struct.append((obj, data[obj]))
-                    if DataBuilder.is_dict(data[obj]): # and data[obj] not in q:
+                    if DataBuilder.is_dict(data[obj]): 
                         q.append(data[obj])
-                    elif DataBuilder.is_iterable(data[obj]): # and data[obj] not in q::
+                    elif DataBuilder.is_iterable(data[obj]):
                         iterables_helper(data[obj], queue)
                 if q:
                     bfs_helper(q, struct)
@@ -68,7 +71,7 @@ class DataBuilder:
                         iterables_helper(obj, queue)
                 return None
 
-            return bfs_helper(queue, bfs_struct)
+            return bfs_helper(queue, bfs_struct) if self.data else []
 
 
     @staticmethod
@@ -92,22 +95,4 @@ class DataBuilder:
 
 
 if __name__ == "__main__":
-    data = {
-        'a': [
-            {
-                'a1': 1,
-                'a2': 2
-            }
-        ],
-        'b': 2
-    }
-
-    data1 = [
-        {'a': 1}
-    ]
-    
-
-    gb = DataBuilder(data1)
-    # print(gb.dfs())
-    print('')
-    print(gb.dfs())
+    pass

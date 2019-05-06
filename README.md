@@ -4,7 +4,8 @@
 
 __Week 1:__
 - Python syntax
-- Basic Python Data Structures (list, tuple, dict, set, list comprehension)
+- Basic Python Data Structures (list, tuple, dict, set, str)
+- List and dict comprehensions
 - Running Python from the terminal
 
 __Week 2__:
@@ -18,7 +19,7 @@ __Week 3:__
 - Learning about unit tests
 - Function arguments
 - Working with data and file standards
-- Parsing json, HMTL and csv
+- Parsing json, HTML and csv files
 
 __Week 4:__
 - OOP principles
@@ -47,3 +48,4 @@ __Week 8:__
 __Week 9:__
 - Introduction to databases
 - diving into sqlite3
+- types of JOINs, sub queries, aggregate functions

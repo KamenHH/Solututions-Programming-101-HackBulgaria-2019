@@ -53,17 +53,16 @@ class DeepOps:
                     if type(self_v) != type(other_v):
                         return False
                     elif DataGenerator.is_dict(self_v):
-                        result = dicts_helper(self_v, other_v)
-                        if not result: 
-                            return result
+                        if not dicts_helper(self_v, other_v): 
+                            return False
                     elif DataGenerator.is_iterable(self_v):
-                        result = iterable_helper(self_v, other_v)
-                        if not result: return result
+                        if not iterable_helper(self_v, other_v):
+                            return False
                     else:
-                        return self_v == other_v
+                        if self_v != other_v:
+                            return False
                 else:
-                    if self_v != other_v:
-                        return False
+                    return False
             return True
             
         def iterable_helper(self_data, other_data):
@@ -73,11 +72,11 @@ class DeepOps:
                 if type(self_item) != type(other_item):
                     return False
                 elif DataGenerator.is_dict(self_item):
-                    result = dicts_helper(self_item, other_item)
-                    if not result: return result
+                    if not dicts_helper(self_item, other_item):
+                        return False
                 elif DataGenerator.is_iterable(self_item):
-                    result = iterable_helper(self_item, other_item)
-                    if not result: return result
+                    if not iterable_helper(self_item, other_item):
+                        return False
                 else:
                     if self_item != other_item:
                         return False

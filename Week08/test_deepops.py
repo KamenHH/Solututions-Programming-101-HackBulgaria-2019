@@ -131,13 +131,13 @@ class TestDeepOps(unittest.TestCase):
     # -----------------------------------------------------------------
     # -------------------- deep_update tests --------------------------
 
-    def test_deep_update_simple_dict_dfs(self):
+    def test_deep_update_with_simple_dict_dfs(self):
         do_obj = DeepOps(self.simple_dict)
         do_obj.deep_update('a', 2)
         expected_result = {'a': 2, 'b': 2}
         self.assertEqual(self.simple_dict, expected_result)
 
-    def test_deep_update_nested_dicts_dfs(self):
+    def test_deep_update_with_nested_dicts_dfs(self):
         do_obj = DeepOps(self.nested_dicts)
         do_obj.deep_update('b', 2)
         expected_result = {
@@ -149,13 +149,13 @@ class TestDeepOps(unittest.TestCase):
         }
         self.assertEqual(self.nested_dicts, expected_result)
     
-    def test_deep_update_simple_list_with_dict_dfs(self):
+    def test_deep_update_with_simple_list_with_dict_dfs(self):
         do_obj = DeepOps(self.simple_list_with_dict)
         do_obj.deep_update('b', 3)
         expected_result = [{'a': 1, 'b': 3}]
         self.assertEqual(self.simple_list_with_dict, expected_result)
 
-    def test_deep_update_nested_dicts_and_lists_dfs(self):
+    def test_deep_update_with_nested_dicts_and_lists_dfs(self):
         do_obj = DeepOps(self.nested_dicts_and_lists)
         do_obj.deep_update('b', 1)
         expected_result = [
@@ -168,7 +168,208 @@ class TestDeepOps(unittest.TestCase):
             }
         ]
         self.assertEqual(self.nested_dicts_and_lists, expected_result)
+
+    # -------------------- deep_compare tests --------------------------
     
+    # ----------------------- simple dicts -----------------------------
+
+    def test_deep_compare_when_both_simple_dicts_are_empty_return_true(self):
+        d1 = {}
+        d2 = {}
+        do_obj = DeepOps(d1)
+        self.assertTrue(do_obj.deep_compare(d2))
+    
+    def test_deep_compare_when_both_simple_dicts_are_equal_return_true(self):
+        d1 = {'a': 1, 'b': 2}
+        d2 = {'a': 1, 'b': 2}
+        do_obj = DeepOps(d1)
+        self.assertTrue(do_obj.deep_compare(d2))
+
+    def test_deep_compare_when_one_of_the_simple_dicts_is_empty_return_false(self):
+        d1 = {'a': 1, 'b': 2}
+        d2 = {}  # empty dict
+        do_obj = DeepOps(d1)
+        self.assertFalse(do_obj.deep_compare(d2))
+
+    def test_deep_compare_when_simple_dicts_have_different_keys_return_false(self):
+        d1 = {'a': 1, 'b': 2}
+        d2 = {'a1': 1, 'b': 2}  # different key
+        do_obj = DeepOps(d1)
+        self.assertFalse(do_obj.deep_compare(d2))
+    
+    def test_deep_compare_when_simple_dicts_have_different_values_return_false(self):
+        d1 = {'a': 1, 'b': 2}
+        d2 = {'a': 1, 'b': 1}  # differenet value
+        do_obj = DeepOps(d1)
+        self.assertFalse(do_obj.deep_compare(d2))
+
+    def test_deep_compare_when_simple_dicts_have_different_values_and_keys_return_false(self):
+        d1 = {'a1': 1, 'b': 1}  # differenet value and key
+        d2 = {'a': 1, 'b': 1}  
+        do_obj = DeepOps(d1)
+        self.assertFalse(do_obj.deep_compare(d2))
+    
+    def test_deep_compare_when_simple_dicts_have_different_lengths_return_false(self):
+        d1 = {'a': 1, 'b': 1, 'c': 1}  # extra key
+        d2 = {'a': 1, 'b': 1}  
+        do_obj = DeepOps(d1)
+        self.assertFalse(do_obj.deep_compare(d2))
+
+    # ----------------------- nested dicts -----------------------------
+
+    def test_deep_compare_when_nested_dicts_are_equal_return_true(self):
+        d1 = {'a': {
+                'a1': 1,
+                'a2': {'a21': 21}
+            }}
+        d2 = {'a': {
+                'a1': 1,
+                'a2': {'a21': 21}
+            }} 
+        do_obj = DeepOps(d1)
+        self.assertTrue(do_obj.deep_compare(d2))
+
+    def test_deep_compare_when_nested_dicts_have_different_keys_return_false(self):
+        d1 = {'a': {
+                'a1': 1,
+                'a2': {'a21': 21}
+            }}
+        d2 = {'a': {
+                'a1': 1,
+                'a2': {'a22': 21}  # different key
+            }} 
+        do_obj = DeepOps(d1)
+        self.assertFalse(do_obj.deep_compare(d2))
+
+    def test_deep_compare_when_nested_dicts_have_different_values_return_false(self):
+        d1 = {'a': {
+                'a1': 1,
+                'a2': {'a21': 21}
+            }}
+        d2 = {'a': {
+                'a1': 1,
+                'a2': {'a21': 22}  # different value
+            }} 
+        do_obj = DeepOps(d1)
+        self.assertFalse(do_obj.deep_compare(d2))
+
+    def test_deep_compare_when_nested_dicts_have_different_values_and_keys_return_false(self):
+        d1 = {'a': {
+                'a1': 1,
+                'a2': {'a21': 21}
+            }}
+        d2 = {'a': {
+                'a': 1, # different key
+                'a2': {'a21': 22}  # different value
+            }} 
+        do_obj = DeepOps(d1)
+        self.assertFalse(do_obj.deep_compare(d2))
+
+    def test_deep_compare_when_nested_dicts_have_different_lengths_return_false(self):
+        d1 = {'a': {
+                'a1': 1,
+                'a2': {'a21': 21}
+            }}
+        d2 = {'a': {
+                'a1': 1,
+                'a2': {'a21': 21,
+                       'a22': 22}  # extra key
+            }} 
+        do_obj = DeepOps(d1)
+        self.assertFalse(do_obj.deep_compare(d2))
+
+    # ----------------------- lists with dicts -----------------------------
+
+    def test_deep_compare_when_both_lists_w_dicts_are_empty_return_true(self):
+        d1 = []
+        d2 = []
+        do_obj = DeepOps(d1)
+        self.assertTrue(do_obj.deep_compare(d2))
+    
+    def test_deep_compare_when_both_lists_w_dicts_are_equal_return_true(self):
+        d1 = [
+            {'a': 1},
+            {'b': [1, 2, 3]}
+        ]
+        d2 = [
+            {'a': 1},
+            {'b': [1, 2, 3]}
+        ]
+        do_obj = DeepOps(d1)
+        self.assertTrue(do_obj.deep_compare(d2))
+
+    def test_deep_compare_when_one_of_the_lists_w_dicts_is_empty_return_false(self):
+        d1 = [{'a': 1, 'b': 2}]
+        d2 = []  # empty list
+        do_obj = DeepOps(d1)
+        self.assertFalse(do_obj.deep_compare(d2))
+
+    def test_deep_compare_when_lists_w_dicts_have_different_keys_return_false(self):
+        d1 = [
+            {'a1': 1},  # differenet key
+            {'b': [1, 2, 3]}
+        ]
+        d2 = [
+            {'a': 1},
+            {'b': [1, 2, 3]}
+        ]
+        do_obj = DeepOps(d1)
+        self.assertFalse(do_obj.deep_compare(d2))
+    
+    def test_deep_compare_when_lists_w_dicts_have_different_values_in_nested_list_return_false(self):
+        d1 = [
+            {'a': 1},  
+            {'b': [1, 2, 3]}
+        ]
+        d2 = [
+            {'a': 1},
+            {'b': [1,2, 4]}  # different value
+        ]
+        do_obj = DeepOps(d1)
+        self.assertFalse(do_obj.deep_compare(d2))
+
+    def test_deep_compare_when_lists_w_dicts_have_different_values_and_keys_return_false(self):
+        d1 = [
+            {'a': 1},  
+            {'b1': [1, 2, 3]}  # different key
+        ]
+        d2 = [
+            {'a': 2},  # diffrenet value
+            {'b': [1, 2, 3]}
+        ]
+        do_obj = DeepOps(d1)
+        self.assertFalse(do_obj.deep_compare(d2))
+    
+    def test_deep_compare_when_lists_w_dicts_have_different_lengths_return_false(self):
+        d1 = [
+            {'a': 1},  
+            {'b1': [1, 2, 3],
+             'b2': 3}  # extra key
+        ]
+        d2 = [
+            {'a': 2},
+            {'b': [1, 2, 3]}
+        ]  
+        do_obj = DeepOps(d1)
+        self.assertFalse(do_obj.deep_compare(d2))
+
+    # ----------------------- more complex data ----------------------------
+    
+    def test_deep_compare_when_complex_data_has_different_types_return_false(self):
+        d1 = {
+            'a': (1, { 
+                'a1': 1
+            }),
+            'b': {'b1': 1}
+        }
+        d2 = {
+            'a': [1, {  # tuple instead of list
+                'a1': 1
+            }],
+            'b': {'b1': 1}
+        }
+        do_obj = DeepOps(d1)
+        self.assertFalse(do_obj.deep_compare(d2))
     
 if __name__ == "__main__":
     unittest.main()

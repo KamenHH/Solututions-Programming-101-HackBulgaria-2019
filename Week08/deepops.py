@@ -84,3 +84,49 @@ class DeepOps:
 
         return dicts_helper(self.data, other) if DataGenerator.is_dict(self.data) else \
                                                     iterable_helper(self.data, other)
+
+    def schema_validator(self, schema: list):
+        """Task 6. Compares the keys of @self.data to those present in the schema(list).
+        @self.data must be a dict!"""
+        
+        if len(self.data) != len(schema):
+            return False
+        
+        def helper(data, keys):
+            for key in data:
+                if DataGenerator.is_dict(data[key]):
+                    keys.append([key, []])  # the empty dict is for the inner keys
+                    helper(data[key], keys[-1][1] if type(keys[-1]) is list else keys)
+                else:
+                    keys.append(key)
+            return keys
+
+        return schema == helper(self.data, [])
+        
+
+if __name__ == "__main__":
+    d = {
+        'key1': 'val1',
+        'key2': 'val2',
+        'key3': {
+            'inner_key1': 'val1',
+            'inner_key2': 'val2'
+        }
+    }
+
+    schema = [
+        'key1',
+        'key2',
+        [
+            'key3', [
+                'inner_key1', 
+                'inner_key2'
+                ]
+        ],
+    ]
+
+    print(DeepOps(d).schema_validator(schema))
+
+
+
+

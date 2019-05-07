@@ -6,7 +6,7 @@ from datagenerator import DataGenerator
 class TestDeepOps(unittest.TestCase):
     def setUp(self):
         self.simple_dict = {'a': 1, 'b': 2}
-        
+
         self.nested_dicts = {
             'a': {
                 'a': 1,
@@ -370,6 +370,49 @@ class TestDeepOps(unittest.TestCase):
         }
         do_obj = DeepOps(d1)
         self.assertFalse(do_obj.deep_compare(d2))
+
+    # -------------------- schema_validator tests --------------------------
+
+    def test_schema_validator_with_simple_dict_and_schema_of_different_lengths_return_true(self):
+        schema = ['a', 'b', 'c']  # schema has extra key 'c'
+        do_obj = DeepOps(self.simple_dict)
+        self.assertFalse(do_obj.schema_validator(schema))
+
+    def test_schema_validator_with_simple_dict_valid_to_schema_return_true(self):
+        schema = ['a', 'b']
+        do_obj = DeepOps(self.simple_dict)
+        self.assertTrue(do_obj.schema_validator(schema))
     
+    def test_schema_validator_with_simple_dict_invalid_to_schema_return_false(self):
+        schema = ['a', 'c']  # second key of simple_dict is 'b'
+        do_obj = DeepOps(self.simple_dict)
+        self.assertFalse(do_obj.schema_validator(schema))
+
+    def test_schema_validator_with_nested_dicts_valid_to_schema_return_true(self):
+        schema = [
+            ['a', [
+                'a', 
+                ['b', ['a']]
+            ]],
+            ['b', [
+                'b'
+            ]]
+        ]
+        do_obj = DeepOps(self.nested_dicts)
+        self.assertTrue(do_obj.schema_validator(schema))
+    
+    def test_schema_validator_with_nested_dicts_ininvalid_to_schema_return_false(self):
+        schema = [
+            ['a', [
+                'a', 
+                ['b', ['a1']]  # key 'a1' in nested dicts is 'a'
+            ]],
+            ['b', [
+                'b'
+            ]]
+        ]
+        do_obj = DeepOps(self.nested_dicts)
+        self.assertFalse(do_obj.schema_validator(schema))
+
 if __name__ == "__main__":
     unittest.main()

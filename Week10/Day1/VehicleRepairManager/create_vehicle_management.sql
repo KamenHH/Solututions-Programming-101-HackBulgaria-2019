@@ -1,0 +1,53 @@
+CREATE TABLE IF NOT EXISTS BaseUser(
+    id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL,
+    user_name VARCHAR(25) UNIQUE NOT NULL,
+    email VARCHAR(25) UNIQUE NOT NULL,
+    phone_number VARCHAR(13),
+    address VARCHAR(25)
+);
+
+CREATE TABLE IF NOT EXISTS Client(
+    base_id INTEGER,
+    FOREIGN KEY(base_id) REFERENCES BaseUser(id)
+);
+
+CREATE TABLE IF NOT EXISTS Mechanic(
+    base_id INTEGER,
+    title VARCHAR(10),
+    FOREIGN KEY(base_id) REFERENCES BaseUser(id)
+);
+
+CREATE TABLE IF NOT EXISTS Service(
+    id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL,
+    name VARCHAR(15)
+);
+
+CREATE TABLE IF NOT EXISTS MechanicService(
+    id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL,
+    mechanic_d INTEGER,
+    service_id INTEGER,
+    FOREIGN KEY(mechanic_d) REFERENCES Mechanic(base_id),
+    FOREIGN KEY(service_id) REFERENCES Service(id)
+);
+
+CREATE TABLE IF NOT EXISTS Vehicle(
+    id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL,
+    category VARCHAR(10) NOT NULL,
+    make VARCHAR(10) NOT NULL,
+    model VARCHAR(10) NOT NULL,
+    register_number VARCHAR(10) NOT NULL,
+    gear_box VARCHAR(9) NOT NULL,
+    owner INTEGER,
+    FOREIGN KEY(owner) REFERENCES Client(base_id)
+);
+
+CREATE TABLE IF NOT EXISTS RepairHour(
+    id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL,
+    date VARCHAR(10) NOT NULL,
+    start_hour VARCHAR(5) NOT NULL,
+    bill REAL NOT NULL,
+    vehicle INTEGER,
+    mechanic_service INTEGER,
+    FOREIGN KEY(vehicle) REFERENCES Vehicle(id),
+    FOREIGN KEY(mechanic_service) REFERENCES MechanicService(id)
+);

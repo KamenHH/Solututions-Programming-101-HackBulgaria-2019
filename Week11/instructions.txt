@@ -1,0 +1,75 @@
+in view - cli
+if patient = cancel hours, save hours, see saved hours, see free hours
+
+login logic - username, password, maybe email...
+
+view -> controller -> model
+
+controller returns object ot view
+
+view calls method from view
+
+in db:
+    **contains both patients and doctors
+    user table:
+        id,
+        username,
+        password,
+        email,
+        status - patient or doctor
+
+    doctor table:
+        id,
+        user_id (FK user table),
+        title,
+
+    slots table:
+        doctor_id (FK doctor table),
+        start_hour,
+        end_hour,
+        date,
+        status - reserved, not reserved
+        room
+
+    patient table:
+        user_id (FK user table),
+        patient_id,
+        address,
+        status,
+        age, 
+        something like egn
+
+    reserved slots table:
+        patient_id (FK patient_table),
+        id_slot (FK slots),
+        status - passed, canceled, pending
+
+
+hospital/
+        /reservations
+        /slots
+
+interface/
+         start,
+         menu,
+         options
+
+event       _handler/
+            ...
+
+tests/
+     /unit/
+          /hospital
+          ...
+
+     /integration
+
+utils/
+     CONSTANTS/
+              db_name,
+
+database_layer/
+
+
+TODO : add logger
+
